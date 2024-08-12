@@ -1,0 +1,32 @@
+# Virtual environment
+venv/
+env/
+
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# Environment variables and config
+.env
+config.json
+
+# Logs
+*.log
+
+# IDE/editor configurations
+.vscode/
+.idea/
+.DS_Store
+
+# Build files
+build/
+dist/
+*.egg-info/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Temporary files
+*.tmp
+*.swp
+*.bak

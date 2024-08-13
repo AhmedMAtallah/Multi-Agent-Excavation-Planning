@@ -186,7 +186,7 @@ class Planner:
         plt.gca().invert_yaxis()
         plt.legend(loc='upper left', bbox_to_anchor=(1, 1))
         plt.grid(True)
-        plt.savefig('paths.png')
+        plt.savefig('output/paths.png')
 
     def generate_grid(self, with_digs=False, with_final_positions=False):
         grid = [['.' for _ in range(self.grid_size)] for _ in range(self.grid_size)]
@@ -235,4 +235,4 @@ class Planner:
         self.plot_grid(grid_after_digs, axes[1], "Grid after sending dig locations")
         self.plot_grid(final_grid, axes[2], f"Final grid after tasks\n(Total ticks: {self.total_time})")
 
-        plt.savefig('grid_before_and_after.png')
+        plt.savefig('output/grid_before_and_after.png')

@@ -23,6 +23,9 @@ build/
 dist/
 *.egg-info/
 
+# Jupyter Notebook
+*.ipynb
+
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints/
 
@@ -30,3 +33,4 @@ dist/
 *.tmp
 *.swp
 *.bak
+

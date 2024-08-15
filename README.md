@@ -16,14 +16,10 @@ The system simulates multiple excavation robots that need to perform digging tas
 - After digging, the robot finds the nearest drop-off location and calculates the shortest path to it, again using the A* algorithm.
 - If a collision is detected (i.e., a robot's intended position is occupied by another robot with equal or higher priority), the algorithm treats that position as an obstacle and replans the path accordingly.
 
-### 3. Execution and Logging
-- Robots move along their planned paths, dig at the designated locations, and then move to the nearest drop-off location to offload their payload.
-- The planner logs each robot’s movements, digs, and offloads for later visualization.
-- The total number of "ticks" (time steps) required for all robots to complete their tasks is recorded.
 
 ## Project Structure
 ```
-multi_agent_planning/
+multi_agent_excavation_planning_system/
 ├── src/
 │   ├── __init__.py          # Makes the src directory a Python package
 │   ├── robot.py             # Contains the Robot class
@@ -100,4 +96,14 @@ This image contains three plots that illustrate the evolution of the 2D grid thr
 
  The image displays the actual routes followed by the robots after they have completed their tasks.
 
+
+
+## Future Work
+
+1. **Algorithmic Enhancements:**
+   **Mixed-Integer Linear Programming (MILP) and Conflict-Based Search (CBS):** Future work will explore MILP amd CPS to optimize multi-agent pathfinding. These algorithms provide robust solutions for collision avoidance and path efficiency. Initial investigations into MILP have already begun, with the aim to integrate more sophisticated optimization techniques into the current system.
+
+ 2. **Online Pickup and Delivery Tasks:**
+   - I aim to enhance the system to handle online excavating and dropoff tasks, drawing inspiration from the paper ["MAPD: Multi-Agent Pickup and Delivery with Transfers"](https://arxiv.org/abs/1705.10868). This will involve developing algorithms that can 
+   dynamically assign and reassign tasks to robots as new requests arrive, optimizing the overall efficiency of the system.
 

@@ -88,6 +88,10 @@ class Planner:
     
     def assign_tasks(self):
         self.total_time = 0 
+        time_step = 0
+        
+        # Initialize reservations
+        reservations = {time_step: set() for time_step in range(self.grid_size * 2)}
 
         while self.dig_locations:
             for robot in self.robots:
@@ -101,12 +105,32 @@ class Planner:
                 path_to_dig = self.a_star(current_position, next_location)
 
                 for step in path_to_dig[1:]:
-                    if not self.is_position_occupied(step, robot):
+                    # Check reservation for the next time step
+                    if step not in reservations[time_step + 1]:
                         robot.move_to(step)
                         self.paths[robot.name].append(step)
                         self.robot_positions[robot.name] = step
                         self.total_time += 1
+                        reservations[time_step + 1].add(step)
                     else:
+                        # Check which robot has higher priority
+                        occupying_robot = next(
+                            (r for r in self.robots if self.robot_positions[r.name] == step),
+                            None
+                        )
+                        if occupying_robot and robot.priority >= occupying_robot.priority:
+                            print(f"{robot.name} with lower priority treats position {step.x},{step.y} as an obstacle.")
+                            self.robot_positions[occupying_robot.name] = robot.position
+                            robot.move_to(step)
+                            self.paths[robot.name].append(step)
+                            self.robot_positions[robot.name] = step
+                            self.total_time += 1
+                            reservations[time_step + 1].add(step)
+                        else:
+                            print(f"{robot.name} with lower priority waits or recalculates.")
+                            path_to_dig = self.a_star(robot.position, next_location)
+                            break                
+
                         print(f"{robot.name} with lower priority treats position {step.x},{step.y} as an obstacle.")
                         self.obstacles.add(step)
                         path_to_dig = self.a_star(robot.position, next_location)
@@ -115,6 +139,7 @@ class Planner:
                 self.dig_points.append(next_location)
                 robot.dig()
                 self.total_time += 1
+                time_step += 1
 
                 drop_off_location = min(self.drop_off_locations, key=lambda loc: self.heuristic(robot.position, loc))
                 adjacent_position = self.get_adjacent_position(drop_off_location, robot.position)
@@ -122,20 +147,22 @@ class Planner:
                 path_to_drop_off = self.a_star(robot.position, adjacent_position)
 
                 for step in path_to_drop_off[1:]:
-                    if not self.is_position_occupied(step, robot):
+                    # Check reservation for the next time step
+                    if step not in reservations[time_step + 1]:
                         robot.move_to(step)
                         self.paths[robot.name].append(step)
                         self.robot_positions[robot.name] = step
                         self.total_time += 1
+                        reservations[time_step + 1].add(step)
                     else:
                         print(f"{robot.name} with lower priority treats position {step.x},{step.y} as an obstacle.")
-                        self.obstacles.add(step)
                         path_to_drop_off = self.a_star(robot.position, adjacent_position)
                         break
 
                 self.drop_off_points.append(drop_off_location)
                 robot.offload()
                 self.total_time += 1
+                time_step += 1
 
     def get_estimated_completion_time(self) -> int:
         """Return the total time computed during assign_tasks."""
